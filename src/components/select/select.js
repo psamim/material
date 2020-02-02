@@ -705,7 +705,12 @@ function SelectMenuDirective($parse, $mdUtil, $mdConstant, $mdTheming) {
     var searchStr = '';
     var clearSearchTimeout, optNodes, optText;
     var CLEAR_SEARCH_AFTER = 300;
-
+   
+    function sanitize (term) {
+      if (!term) return term;
+      return term.replace(/[\\\^\$\*\+\?\.\(\)\|\{\}\[\]]/g, '\\$&');
+    }
+   
     self.optNodeForKeyboardSearch = function(e) {
       clearSearchTimeout && clearTimeout(clearSearchTimeout);
       clearSearchTimeout = setTimeout(function() {
@@ -716,7 +721,7 @@ function SelectMenuDirective($parse, $mdUtil, $mdConstant, $mdTheming) {
       }, CLEAR_SEARCH_AFTER);
 
       searchStr += e.key;
-      var search = new RegExp('^' + searchStr, 'i');
+      var search = new RegExp('^' + santize(searchStr), 'i');
       if (!optNodes) {
         optNodes = $element.find('md-option');
         optText = new Array(optNodes.length);
